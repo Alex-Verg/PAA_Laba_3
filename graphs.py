@@ -12,11 +12,36 @@ def read_graph():
     return table
 
 
+def matr_print(A):
+    for i in range(len(A)):
+        for j in range(len(A[i])):
+            print(A[i][j], end=" ")
+        print()
+
+def matr_equal(A, B, *matr):
+
+    if len(A) != len(B): return False
+    for i in range(len(A)):
+        if len(A[i]) != len(B[i]): return False
+        for j in range(len(A[i])):
+            if A[i][j] != B[i][j]: return False
+
+    for m in matr:
+        if len(A) != len(m): return False
+        for i in range(len(A)):
+            if len(A[i]) != len(m[i]): return False
+            for j in range(len(A[i])):
+                if A[i][j] != m[i][j]: return False
+
+    return True
+
+
+
 class Graph():
 
     def __init__(self, table, v=30):
         self.matr_sub = copy.deepcopy(table)
-        self.v = len(table)
+        self.v = v
 
     def ford_bellman(self, sup=False):
         answ = [[0 if i == j else 10e7 for j in range(self.v)] for i in range(self.v)]
@@ -119,12 +144,21 @@ class Graph():
 
 if __name__ == "__main__":
     gr = Graph(read_graph())
-    print(*gr.ford_bellman())
-    print(*gr.dijkstra())
-    print(*gr.floyd_warshall())
-    print(*gr.johnson())
+    print('\n' + 'Результат роботи алгоритму Форда-Беллмана:' + '\n')
+    matr_print(fb := gr.ford_bellman())
+    print('\n' + 'Результат роботи алгоритму Дейкстри:' + '\n')
+    matr_print(dij := gr.dijkstra())
+    print('\n' + 'Результат роботи алгоритму Флойда-Варшалла:' + '\n')
+    matr_print(fw := gr.floyd_warshall())
+    print('\n' + 'Результат роботи алгоритму Джонсона:' + '\n')
+    matr_print(john := gr.johnson())
 
-    #gr = Graph([[0, -2, 7, 5], [0, 0, 8, 6], [0, 3, 0, -4], [-1, 0, 0, 0]])
+    if matr_equal(fb, dij, fw, john):
+        print('\n' + 'В результаті роботи усіх чотирьох алгоритмів отримані однакові результати.' + '\n')
+    else:
+        print('\n' + 'Алгоритми видають різний результат :(' + '\n')
+
+    #gr = Graph([[0, -2, 7, 5], [0, 0, 8, 6], [0, 3, 0, -4], [-1, 0, 0, 0]], 4)
     #print(*gr.floyd_warshall())
     #print(*gr.ford_bellman())
     #print(*gr.johnson())
